@@ -69,8 +69,9 @@ print('TwelveOaks PAX Count= '+str(TwelveOaks_COUNTER)+'\n')
 TwelveOaks_counts = Counter(TwelveOaks_match)
 TwelveOaks_Payout = 0
 for dudes in TwelveOaks_counts:
-    print (dudes+' owes '+ (str(TwelveOaks_COUNTER - TwelveOaks_counts[dudes]))+' (posted '+str(TwelveOaks_counts[dudes])+' times.)')
-    TwelveOaks_Payout = TwelveOaks_Payout + (TwelveOaks_COUNTER - TwelveOaks_counts[dudes])
+    if dudes in TwelveOaksPaying:
+        print (dudes+' owes '+ (str(TwelveOaks_COUNTER - TwelveOaks_counts[dudes]))+' (posted '+str(TwelveOaks_counts[dudes])+' times.)')
+        TwelveOaks_Payout = TwelveOaks_Payout + (TwelveOaks_COUNTER - TwelveOaks_counts[dudes])
 
 print('\nTotal TwelveOaks payout = $'+str(TwelveOaks_Payout))
 
