@@ -4,12 +4,17 @@ import os
 import re
 import sys
 import time
+from collections import Counter
 
 #array of FNGs
-FNGs=['Angel', 'Pyle', 'Pile', 'Oboe', 'Snowden', 'Jeter', 'Boot Scoot', 'Pastel', 'Boots', 'Warhol', 'Tumbles', 'Dory', 'Tee Time', 'Posada', 'Vanellope', 'Tonka', 'Tony the Teacher', 'Pistorius', 'Tetanus', 'U-verse', 'Finkle', 'Heavy Flow', 'BB-8', 'Yellow Submarine', 'Sea Legs', 'Brownie', 'White Claw', 'Duck Hunt', 'Go-Gurt', 'Grasshopper', 'Big Green']
-
+FNGs=['Angel', 'Pyle', 'Pile', 'Oboe', 'Snowden', 'Jeter', 'Boot Scoot', 'Pastel', 'Boots', 'Warhol', 'Tumbles', 'Dory', 'Tee Time', 'Posada', 'Vanellope', 'Tonka', 'Tony the Teacher', 'Pistorius', 'Tetanus', 'U-verse', 'Finkle', 'Heavy Flow', 'BB-8', 'Yellow Submarine', 'Sea Legs', 'Brownie', 'White Claw', 'Duck Hunt', 'Go-Gurt', 'Grasshopper', 'Big Green', 'Snip']
 FNG_COUNTER=0
 FNG_COST=57
+
+TwelveOaks=['3rd Cousin','AAA','Angel','Blue Hen','Boot Scoot','Brony','Brownie','Buford','Cowboy','Da Business','Dawgpound','Flanigan','Forceps','Moby','Peak Week','Philly Special','Pigpen','Pyle','Slide Rule','Thigh Master']
+TwelveOaksPaying=['3rd Cousin','Blue Hen','Boot Scoot','Brony','Da Business','Flanigan','Moby','Peak Week','Pigpen','Slide Rule']
+TwelveOaks_COUNTER=0
+TwelveOaks_match=[]
 
 #download July pages and look for FNGs
 urls= ['https://f3southwake.com/2019/07/', 'https://f3southwake.com/2019/07/page/2/','https://f3southwake.com/2019/07/page/3/', 'https://f3southwake.com/2019/07/page/4/','https://f3southwake.com/2019/07/page/5/', 'https://f3southwake.com/2019/07/page/6/', 'https://f3southwake.com/2019/07/page/7/', 'https://f3southwake.com/2019/07/page/8/', 'https://f3southwake.com/2019/07/page/9/', 'https://f3southwake.com/2019/07/page/10/', 'https://f3southwake.com/2019/07/page/11/', 'https://f3southwake.com/2019/07/page/12/', 'https://f3southwake.com/2019/07/page/13']
@@ -43,6 +48,13 @@ for url in urls:
                     if match and tags[0].contents[0] != i.contents[0]:
                         FNG_COUNTER=FNG_COUNTER+1
                         print(str(FNG_COUNTER)+') '+pax+' posted @ '+tags[0].contents[0]+' on '+time_+ ' for ' +title)
+                for resident in TwelveOaks:
+                    match=''
+                    match = re.search(resident,pax,re.IGNORECASE)
+                    if match and tags[0].contents[0] != i.contents[0]:
+                        TwelveOaks_COUNTER=TwelveOaks_COUNTER+1
+                        print(str(TwelveOaks_COUNTER)+') '+pax+' posted @ '+tags[0].contents[0]+' on '+time_+ ' for ' +title)
+                        TwelveOaks_match.append(resident)
     except:
         print('page not found for: '+url)                
 
@@ -51,4 +63,15 @@ print('\n')
 print('FNG Count: '+str(FNG_COUNTER))
 cost = FNG_COST*FNG_COUNTER
 print('Cost per FNG: '+str(FNG_COST))
-print('Total Cost: '+str(cost))
+print('FNG Total Cost: '+str(cost))
+
+print('TwelveOaks PAX Count= '+str(TwelveOaks_COUNTER)+'\n')
+TwelveOaks_counts = Counter(TwelveOaks_match)
+TwelveOaks_Payout = 0
+for dudes in TwelveOaks_counts:
+    print (dudes+' owes '+ (str(TwelveOaks_COUNTER - TwelveOaks_counts[dudes]))+' (posted '+str(TwelveOaks_counts[dudes])+' times.)')
+    TwelveOaks_Payout = TwelveOaks_Payout + (TwelveOaks_COUNTER - TwelveOaks_counts[dudes])
+
+print('\nTotal TwelveOaks payout = $'+str(TwelveOaks_Payout))
+
+print('\n FNG + TwelveOaks Payout =$'+str(cost+TwelveOaks_Payout))
