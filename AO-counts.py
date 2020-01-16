@@ -7,12 +7,14 @@ import time
 import csv
 from collections import Counter
 
+#PAX to look for
 PAX=['warbucks']
 
 #download July pages and look for FNGs
 
 urls = []
 counts=[]
+#define AO to look for PAX at
 categories=['nutcracker'] #'disney','purple-cobra','any-given-sunday', 'cletus', 'crazy-ivan','downtown-train', 'ground-pounder','kennys-grave','mutiny','nutcracker','paradise-city','possum-trot','running-4-the-john','sheepdog','tea-time','the-nest','thunder','tiger-blood','to-be-determined','u-turn']
 for category in categories:
     counts.clear()
@@ -21,7 +23,7 @@ for category in categories:
         urls.append('https://f3southwake.com/category/'+category+'/page/'+str(i+1)+'/')
     #print(urls)
 
-    
+    #parse backblasts to pull out PAX at AO
     for url in urls:
         req = urllib.request.Request(url)
         #print(req)
@@ -51,30 +53,13 @@ for category in categories:
                     pax= i.contents[0].encode('utf-8')
                     pax = pax.decode('utf-8')        
                     PAX.append(pax)
+                    #look for PAX matches
                     if pax in ['Warbucks']:
+                        #ommitting tag matches agains AO names
                         if pax not in ['Fitness', 'Purple Cobra', 'Disney', 'Any Given Sunday', 'Cletus', 'Crazy Ivan', 'Downtown Train', 'Ground Pounder', 'Kennys Grave', 'Mutiny', 'Nutcracker', 'Paradise City', 'Possum Trot', 'Running 4 The John', 'Sheepdog', 'Tea Time', 'The Nest', 'Thunder', 'Tiger Blood', 'To Be Determined', 'U Turn']:
                             counter=counter+1
                             print(category+' '+time_+' '+ title+ ' '+ pax)
                 counts.append(counter)
         except:
             print('page not found for: '+url)                
-    #print(category+' '+str(counts))
-    '''
     
-    matches=[]
-    matches = Counter(PAX)
-    pairs = []
-    for i in matches:
-        pairs.append([i,matches[i]])
-    print('\n\n***'+category+'**')
-    f = open(category+'.csv','w')
-    f.write(category+'\n\n')
-    f.write('PAX,Count\n')
-    for i in sorted(pairs, key=lambda pax_:pax_[1],reverse=True):
-        if i[0] not in ['Fitness', 'Purple Cobra', 'Disney', 'Any Given Sunday', 'Cletus', 'Crazy Ivan', 'Downtown Train', 'Ground Pounder', 'Kennys Grave', 'Mutiny', 'Nutcracker', 'Paradise City', 'Possum Trot', 'Running 4 The John', 'Sheepdog', 'Tea Time', 'The Nest', 'Thunder', 'Tiger Blood', 'To Be Determined', 'U Turn']:
-            print(str(i[0])+','+str(i[1]))
-            f.write(str(i[0])+','+str(i[1])+'\n')
-    f.close()
-    PAX=[]
-    urls=[]
-    '''
